@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.hls.HlsMediaSource
@@ -60,8 +61,12 @@ class PlaybackService : MediaSessionService() {
             MediaItem.Builder()
                 .setMediaId(id)
                 .setUri(streamUrl)
-                .setTitle(title)
-                .setArtist(artist)
+                .setMediaMetadata(
+                    MediaMetadata.Builder()
+                        .setTitle(title)
+                        .setArtist(artist)
+                        .build()
+                )
                 .build()
     }
 }
