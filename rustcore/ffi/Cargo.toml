@@ -1,0 +1,32 @@
+[package]
+name = "aurafy-ffi"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib", "staticlib", "lib"]
+name = "aurafy_ffi"
+
+[[bin]]
+name = "uniffi-bindgen"
+path = "src/bin/uniffi-bindgen.rs"
+
+[dependencies]
+domain = { path = "../domain" }
+providers = { path = "../providers" }
+playlist_import = { path = "../import" }
+data = { path = "../data" }
+playback = { path = "../playback" }
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+uniffi = { workspace = true }
+async-trait.workspace = true
+uuid.workspace = true
+uniffi_bindgen = "0.28"
+anyhow = "1"
+camino = "1"
+
+[dev-dependencies]
+tokio = { version = "1.38", features = ["macros", "rt-multi-thread"] }

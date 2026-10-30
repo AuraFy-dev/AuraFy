@@ -1,0 +1,20 @@
+[package]
+name = "playlist_import"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+domain = { path = "../domain" }
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+tracing.workspace = true
+async-trait.workspace = true
+roxmltree = "0.20"
+
+
+[dev-dependencies]
+tokio = { version = "1.38", features = ["macros", "rt"] }

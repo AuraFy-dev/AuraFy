@@ -1,0 +1,18 @@
+[package]
+name = "playback"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+domain = { path = "../domain" }
+aes-gcm.workspace = true
+ring.workspace = true
+tokio.workspace = true
+thiserror.workspace = true
+serde.workspace = true
+rand.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+tempfile = "3.10"

@@ -1,0 +1,20 @@
+[package]
+name = "data"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+domain = { path = "../domain" }
+sqlx.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+tracing.workspace = true
+async-trait.workspace = true
+
+[dev-dependencies]
+tokio = { version = "1.38", features = ["macros", "rt-multi-thread"] }

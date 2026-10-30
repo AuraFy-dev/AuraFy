@@ -1,0 +1,17 @@
+[package]
+name = "sync"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+domain = { path = "../domain" }
+axum.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+tracing.workspace = true
+tower-http.workspace = true
+anyhow.workspace = true

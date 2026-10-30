@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  rust-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rustcore
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rustcore
+      - name: Tests
+        run: cargo test --workspace
+      - name: Clippy
+        run: cargo clippy --workspace -- -D warnings
+
+  android-build:
+    runs-on: ubuntu-latest
+    needs: rust-tests
+    defaults:
+      run:
+        working-directory: rustcore
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rustcore
+      - name: Install cargo-ndk
+        run: cargo install --locked cargo-ndk
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Build Rust .so for Android
+        run: |
+          cd ffi
+          cargo ndk -t arm64-v8a -t armeabi-v7a -t x86_64 -o ../../android/app/src/main/jniLibs build --release
+      - name: Generate UniFFI Kotlin bindings
+        run: |
+          cd ffi
+          cargo run --bin uniffi-bindgen --release -- \
+            ../../target/release/libaurafy_ffi.so \
+            ../../android/app/src/main/java/
+      - name: Gradle build (APK + AAB)
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug bundleRelease --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aurafy-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aurafy-aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
