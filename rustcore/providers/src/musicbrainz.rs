@@ -34,6 +34,9 @@ struct MbArtistCredit {
     name: String,
 }
 
+// The response schema includes fields we do not currently consume; keep the
+// structs a faithful mirror of the API and silence dead_code for them.
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 struct MbRelease {
     id: String,
@@ -42,6 +45,7 @@ struct MbRelease {
     media: Vec<MbMedium>,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 struct MbMedium {
     #[serde(default)]
@@ -54,18 +58,21 @@ struct MbRecordingSearch {
     recordings: Vec<MbRecording>,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 struct MbArtist {
     id: String,
     name: String,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 struct MbArtistList {
     #[serde(default)]
     artists: Vec<MbArtist>,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 struct MbReleaseList {
     #[serde(default)]
@@ -85,6 +92,10 @@ impl MusicBrainzProvider {
             app_name,
             contact,
         })
+    }
+
+    pub fn user_agent(&self) -> String {
+        format!("{}/0.1 ({})", self.app_name, self.contact)
     }
 
     /// Placeholder used when the HTTP client cannot be built (e.g. no TLS
@@ -149,6 +160,7 @@ impl MusicProvider for MusicBrainzProvider {
         let resp: MbRecordingSearch = self
             .client
             .get(&url)
+            .header(reqwest::header::USER_AGENT, self.user_agent())
             .send()
             .await?
             .error_for_status()

@@ -115,7 +115,7 @@ impl Repository {
     }
 
     pub async fn get_playlist(&self, id: &str) -> Result<Option<Playlist>, RepoError> {
-        let playlist: Option<(String, String, Option<String>, Option<String>, String)> =
+        let playlist: Option<PlaylistRow> =
             sqlx::query_as("SELECT id, title, description, owner, source FROM playlists WHERE id = ?")
                 .bind(id)
                 .fetch_optional(&self.pool)
@@ -203,6 +203,8 @@ impl Repository {
         rows.into_iter().map(TryInto::try_into).collect::<Result<Vec<_>, _>>().map_err(Into::into)
     }
 }
+
+type PlaylistRow = (String, String, Option<String>, Option<String>, String);
 
 #[derive(sqlx::FromRow)]
 struct TrackRow {
