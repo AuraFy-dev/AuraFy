@@ -45,6 +45,8 @@ jobs:
           java-version: '17'
       - name: Setup Android SDK packages
         run: |
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+          sdkmanager --version
           yes | sdkmanager --licenses > /dev/null || true
           sdkmanager "platforms;android-34" "build-tools;34.0.0" "ndk;26.1.10909125" > /dev/null
       - name: Build Rust .so for Android
